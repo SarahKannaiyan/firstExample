@@ -1,0 +1,128 @@
+secondary password of Azure:
+
+sarahk
+Zorro_666
+
+Login into Azure:
+https://portal.azure.com
+
+Step 2: Go to SQL database
+3: click on ADD button
+4. enter all fields
+
+Server name: hexserver-sara
+admin login: sarahk
+Password_1234
+
+------------------------------
+
+Server=tcp:hexserver-sara.database.windows.net,1433;Initial Catalog=hexserver-sara;Persist Security Info=False;User ID=sarahk;Password=Password_1234;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+
+
+Home
+hexserver-sara
+Firewall settings
+
+AllowAll
+0.0.0.0
+255.255.255.255
+
+------------------------------------------------------
+
+8 oct 2018
+-------------
+KEYS ->
+https://docs.microsoft.com/en-us/azure/cosmos-db/introduction
+azure COSMOS DB:
+-> NOSQL data storage 
+-> SQL( document db) API, MONGO API, Cassandra API , TABLE, Gremlin(graph) API
+-> SLA on multiple parameters
+-> Geo-replication
+
+------------------------------------------------------------------------------------------------------------
+Azure deployment:
+=================
+
+1,) Webpack for containers -> dedicated machine/VM allocated for appln,its costly
+->Code
+->Image
+2.) Azure Container Instance (ACI) -> serverless
+-> pay by minutes
+
+1 and 2 -> both support Linux n windows
+
+3.) AKS Azure Kubernetes Service ( [ACS/AKS] -> its like Clusters
+4.) Service Fabric -> its like Clusters
+
+------------------------------------------------------------------------------------------------------------
+
+To work offline  Azure n COSMOS DB - 
+=====================================
+1.) Azure Storage Emulator: 
+Download n Install
+and links -> https://azure.microsoft.com/en-us/downloads/?sdk=net
+Azure Storage Emulator
+
+2.) COSMOS DB Emulator :Binaries	Download MSI
+
+and links - https://docs.microsoft.com/en-us/azure/cosmos-db/local-emulator
+
+------------------------------------------------------------------------------------------------------------
+right click "Show Storage Emulator UI" -> AzureStorageEmulator.exe status
+
+if getting 8081 port is already in use, then execute the below command line:
+
+C:\Program Files\Azure Cosmos DB Emulator>CosmosDB.Emulator.exe /port=8082
+
+right click Azure COSMOS DB Emulator icon, "Open Data Explorer"
+
+https://localhost:8082/_explorer/index.html
+------------------------------------------------------------------------------------------------------------
+
+09-OCT-2018:
+=============
+
+Functions & Logic App:
+
+1.) Piece of code
+2.) Execute Independently
+3.) FAAS
+4.) EVENT Driven(Triggered on event)
+5.) Focus on code
+6.) Duration - 5 mins (max 10 mins)
+7.) Plan 
+	-> Consumption Plan
+	-> App Service Plan
+
+Functions STEP:
+1.)lANGUAGE (c#,JS,F#..)
+2.) tRIGGER -MAX 1 trigger
+3.) Binding
+
+----------------------------------------
+To create a function app:
+portal.azure.com
+create a resource -> function app-> new create function (inside function app, creating a function)
+once created function-> new function->
+Http Trigger -> Authorization Level has 3 types->Anonymous,function and Admin.
+
+---------------------------------------------------------------------------
+To download n install AZURE STORAGE EXPLORER:
+-----------------------------------------
+
+https://azure.microsoft.com/en-in/features/storage-explorer/
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+https://blogs.msdn.microsoft.com/logicapps/2016/07/27/azure-logic-apps-reaches-general-availability/
+=================================================================================================================
+
+Topics:
+
+->API MANAGEMENT
+->EVENT GRID
+
+https://docs.microsoft.com/en-in/azure/event-grid/overview
+=================================================================================================================
+
+
