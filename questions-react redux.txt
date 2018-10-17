@@ -1,0 +1,36 @@
+arrow function react benefits
+constructor
+promise
+export
+callback
+--babel use react 
+--->convert es6 to es5
+
+syntactic sugar
+props state property
+this.setState -> two benefits
+
+this.setState({count:0}) ->//
+
+//callback function
+this.setState((preState)=>{
+return {count:0}:
+})
+
+how do we set default property? default props assign objects
+
+state and props
+
+import PropTypes from "prop-types"
+
+App.propTypes={
+prop1:PropTypes.onf
+prop2:
+}
+
+what is props.childrens
+
+use of map
+
+jsx
+

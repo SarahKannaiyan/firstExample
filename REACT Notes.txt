@@ -1,0 +1,116 @@
+ES5 2009
+ES6 2015
+
+Babel -> special type of compiler
+
+Topics of REACT:
+1.) template literals
+2.) default parameter
+3.) Let & Const
+4.) REST Parameter ->rest of parameters collected by array
+
+5.) Destructuring ->
+
+6.) Spread Operator ->
+
+IE11 to run the react js example ->"babel Standalone  cdn" search 
+-> cdn is the content delivery network
+<script scr="https://cdnjs.cloudflare.com/ajax/babel-standalone"
+
+
+7.) Syntactic Sugar ->
+
+8.) transpiler -> convert ES5 to ES6
+
+9.) Arrow Function ->
+	1. Concise
+	2. Better "this"
+
+
+10.) Class, static, constructor with parameters -> no destruct
+
+11.) 
+1. Callback(Nested CBs)
+2. Error Handling
+axios web api - one of popular api use in the react js.
+================================================================================================
+React editor -> to install all these plugins from extensions link
+
+(Auto Close Tag
+Auto Rename Tag
+Bracket Pai COlorizer
+Path Intellisense
+
+ESLint
+Prettier code formatter
+
+VS Color Picker
+vscode-icons
+TODO highlight)
+
+[ctrl+p -> settings ->enable its as true
+formatonsave
+autoFixonsave]
+=======================================================================
+REACT CDN LINKS from the below link:
+-------------------------------------------------------------------------
+https://reactjs.org/docs/cdn-links.html
+
+BABEL EDITOR:
+-------------
+http://babeljs.io/repl
+
+http://babeljs.io/en/repl.html#?babili=false&browsers=&build=&builtIns=false&spec=false&loose=false&code_lz=DwCwjAfAEgpgNnA9gAgOqIE5wCYEJgD04EQA&debug=false&forceAllTransforms=false&shippedProposals=false&circleciRepo=&evaluate=false&fileSize=false&timeTravel=false&sourceType=module&lineWrap=true&presets=es2015%2Creact%2Cstage-2&prettier=false&targets=&version=6.26.0&envVersion=
+==============================================================================================
+
+npm code in cmd prompt:
+------------------------
+
+npm install create-react-app -g
+
+create-react-app <project-name>
+==============================================================================================
+
+jest test:
+------------
+create empty newfolder and then execute the below command:
+
+npm init -y
+
+npm install eslint -g
+npm install eslint --save-dev
+
+eslint --init
+
+output:
+? How would you like to configure ESLint? Answer questions about your style
+? Which version of ECMAScript do you use?
+  ES3
+> ES5
+  ES2015
+  ES2016
+  ES2017
+  ES2018
+C:\Sarah\react_test_prj3>eslint --init
+? How would you like to configure ESLint? Use a popular style guide
+? Which style guide do you want to follow? Airbnb (https://github.com/airbnb/javascript)
+? Do you use React? Yes
+? What format do you want your config file to be in? JSON
+Checking peerDependencies of eslint-config-airbnb@latest
+The config that you've selected requires the following dependencies:
+
+eslint-config-airbnb@latest eslint@^4.19.1 || ^5.3.0 eslint-plugin-import@^2.14.0 eslint-plugin-jsx-a11y@^6.1.1 eslint-plugin-react@^7.11.0
+? Would you like to install them now with npm? Yes
+Installing eslint-config-airbnb@latest, eslint@^4.19.1 || ^5.3.0, eslint-plugin-import@^2.14.0, eslint-plugin-jsx-a11y@^6.1.1, eslint-plugin-react@^7.11.0
+npm WARN react_test_prj3@1.0.0 No description
+npm WARN react_test_prj3@1.0.0 No repository field.
+
++ eslint@5.6.0
++ eslint-plugin-jsx-a11y@6.1.1
++ eslint-plugin-import@2.14.0
++ eslint-plugin-react@7.11.1
++ eslint-config-airbnb@17.1.0
+added 68 packages and updated 1 package in 18.516s
+Successfully created .eslintrc.json file in C:\Sarah\react_test_prj3
+==============================================================================================
+//172.25.163.79

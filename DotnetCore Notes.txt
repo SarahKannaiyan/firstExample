@@ -1,0 +1,570 @@
+Command to create a new appln, build n publish:
+====================================================
+C:\Sarah\DotnetCoreProject>dotnet new
+
+To create a new console appln
+----------------------------------------
+C:\Sarah\DotnetCoreProject>dotnet new console
+
+to create a new console appln with name
+----------------------------------------
+>dotnet new console -o MyConsoleAppln
+
+>cd MyConsoleAppln
+
+>dotnet restore
+
+>dotnet build
+
+>dotnet run
+
+to publish the appln
+---------------------
+>dotnet publish
+
+===============================================================
+ASP.NET core appln
+
+In Startup.cs -> Configure method
+
+IApplicationBuilder app class
+3 methods is used top write a middleware:
+-----------------------------------------------------------
+app.Run() -> 
+app.Map() ->
+app.Use() ->
+
+Topics discussed:
+==============================
+MiddlewareExtensions
+DefaultFilesOptions
+StaticFileOptions
+DirectoryBrowserOptions
+FileServerOptions
+----------------
+
+HTTPS redirection
+responsecompression
+--------------------------------
+Dependency Injection
+------------------------------
+In Startup.cs files,
+ConfigureServices method -> 
+1. AddSingleton => its gives single instance object through out the appln
+2. AddTransient => its diff object
+3. AddScoped => within class has same instance object and next round of request its has another instance.
+-----------------------------------------------------------------------------------------------------------
+Install Nuget packages:
+=======================
+1. autofac 4.8.1
+2. Alexinea.Autofac.Extensions.DependencyInjection
+
+-----------------------------------------------------------------------------------------------------------
+StructureMap Url:
+----------------
+http://structuremap.github.io/setter-injection/
+
+
+-----------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------
+26-09-2018:
+==================
+.Net Configuration:
+using the below to store the configuartion files:
+
+Key Vault provider
+INI, XML, JSON provider
+In memory
+EF(EntityFramework) Database
+Environment Variables
+CommandLine Args
+
+-----------------------------------------------------------------------------------------------------------
+
+Self-hosting:
+
+Step 1: add this line <RuntimeIdentifier>win10-x64</RuntimeIdentifier> in the csproj file.
+
+step 2:
+Install nuget package:
+
+Microsoft.AspNetCore.Hosting.WindowsServices
+
+step 3:IN program.cs files,
+
+using Microsoft.AspNetCore.Hosting.WindowsServices;
+main function:
+//to run as service
+BuildWebHost(args).RunAsService();
+
+ public static IWebHost BuildWebHost(string[] args)
+        {
+		//specific the current module path
+            var exePath = Process.GetCurrentProcess().MainModule.FileName;
+            var contentPath = Path.GetDirectoryName(exePath);
+
+            return WebHost.CreateDefaultBuilder(args)
+            .UseContentRoot(contentPath) 
+	    .UseStartup<Startup>()
+            .Build();
+        }
+step 4: publish,
+IN settings tab, Deployment Mode -> Self-Contained and target -> win10-x64
+
+step5:
+open cmd as administrator.
+execute the below command
+
+C:\Windows\system32>sc.exe create dotnetcorewebservice binPath= "C:\Sarah\DotNetCoreProjects\ConfigurationDemo\ConfigurationDemo\bin\Release\netcoreapp2.0\win10-x64\publish\ConfigurationDemo.exe"
+[SC] CreateService SUCCESS
+
+C:\Windows\system32>sc start dotnetcorewebservice
+
+SERVICE_NAME: dotnetcorewebservice
+        TYPE               : 10  WIN32_OWN_PROCESS
+        STATE              : 2  START_PENDING
+                                (NOT_STOPPABLE, NOT_PAUSABLE, IGNORES_SHUTDOWN)
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x7d0
+        PID                : 12328
+        FLAGS              :
+
+sc query dotnetcorewebservice
+sc stop dotnetcorewebservice
+sc delete "dotnetcorewebservice"
+-----------------------------------------------------------------------------------------------------------
+
+TagHelpers ->used in asp.net core
+
+-----------------------------------------------------------------------------------------------------------
+27-09-2018
+==========
+
+Route Constraints in asp.net core
+==================================
+
+
+State Management in in asp.net core
+====================================
+
+Cookies
+Session 
+TempData
+QueryString
+HiddenControl
+Caching
+Dedenpendency Injection -DI
+HttpContext-Items
+
+
+Cookies Example:
+===================
+
+step 1: Index.cshtml file
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="col-lg-6 col-md-offset-3">
+    <form method="post" asp-action="Index"asp-controller="Home">
+        <div class="form-group">
+            <label for="name" class="control-label">Name</label>
+            <input type="text" name="firstname" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" name="btn" type="submit">Submit</button>
+        </div>
+    </form>
+
+</div>
+
+step 2: HomeController file:
+//Index Constructor
+
+	 [HttpPost]
+        public IActionResult Index(string firstname)
+        {
+            //Cookies
+            Response.Cookies.Append("myname", firstname, new CookieOptions
+            {
+                MaxAge = TimeSpan.FromMinutes(10)
+            });
+	    return View();
+        }
+//About page to display the name
+public IActionResult About()
+        {
+            //Cookies
+            ViewData["username"] = Request.Cookies["myname"];
+            Response.Cookies.Delete("myname");
+	    return View();
+        }
+Session Example:
+==================================================================================================================
+step 1: same index.cshtml
+
+step 3:
+
+HomeController file:
+//Index Constructor
+
+	 [HttpPost]
+        public IActionResult Index(string firstname)
+        {
+            //Session
+            HttpContext.Session.SetString("myname", firstname);
+            HttpContext.Session.CommitAsync();
+	    return View();
+        }
+//About page to display the name
+public IActionResult About()
+        {
+           //Session
+            ViewData["username"] = HttpContext.Session.GetString("myname");
+            HttpContext.Session.Clear();
+	    return View();
+        }
+
+Step 3: Startup.cs
+
+ public void ConfigureServices(IServiceCollection services)
+        {
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            //Add session -- lines
+            services.AddDistributedMemoryCache();
+            services.AddSession(options =>
+            {
+                options.Cookie = new CookieBuilder
+                {
+                    Name="SESSION",
+                    Expiration = TimeSpan.FromMinutes(10)
+                };
+                options.IdleTimeout = TimeSpan.FromMinutes(2);
+            });
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+        }
+
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
+            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+            app.UseCookiePolicy();
+
+            app.UseSession(); //add session -- included
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
+        }
+==============================================================================================================
+
+Tempdata Example:
+==================================================================================================================
+step 1: same index.cshtml
+
+step 3:
+
+==================================================================================================================
+
+
+Caching: 3 types
+
+1. In-memory cache ->
+2. distributed cache -> storing into distributed locations and stored in two ways -> redis and Sql DB
+3. response cache -> Two types -
+> attribute: its only for particular action class and through middleware, its stores through out appln
+
+redis caching:
+-----------------
+
+https://github.com/microsoftarchive/redis/releases
+
+https://fastoredis.com/anonim_users_downloads
+
+
+=========================================================================================
+
+EF CORE DE:
+
+Add the below nu GET packages:
+
+1.) Microsoft.EntityFrameworkCore.Sqlite
+2.) Microsoft.EntityFrameworkCore.Design
+
+
+Command explore:
+execute the below
+>dotnet ef migrations add "InitialCreate"
+>dotnet ef database update
+
+
+output results:
+C:\Sarah\DotNetCoreProjects\EFCoreDemo\EFCoreDemo>dotnet ef migrations add "InitialCreate"
+
+Welcome to .NET Core!
+---------------------
+Learn more about .NET Core: https://aka.ms/dotnet-docs
+Use 'dotnet --help' to see available commands or visit: https://aka.ms/dotnet-cli-docs
+
+Telemetry
+---------
+The .NET Core tools collect usage data in order to help us improve your experience. The data is anonymous and doesn't include command-line arguments. The data is collected by Microsoft and shared with the community. You can opt-out of telemetry by setting the DOTNET_CLI_TELEMETRY_OPTOUT environment variable to '1' or 'true' using your favorite shell.
+
+Read more about .NET Core CLI Tools telemetry: https://aka.ms/dotnet-cli-telemetry
+
+ASP.NET Core
+------------
+Successfully installed the ASP.NET Core HTTPS Development Certificate.
+To trust the certificate run 'dotnet dev-certs https --trust' (Windows and macOS only). For establishing trust on other platforms refer to the platform specific documentation.
+For more information on configuring HTTPS see https://go.microsoft.com/fwlink/?linkid=848054.
+Done. To undo this action, use 'ef migrations remove'
+
+C:\Sarah\DotNetCoreProjects\EFCoreDemo\EFCoreDemo>dotnet ef database update
+Applying migration '20180927100934_InitialCreate'.
+Done.
+
+C:\Sarah\DotNetCoreProjects\EFCoreDemo\EFCoreDemo>
+=============================================================================================================
+once executed the blogs.db created in the solution project
+=============================================================================================================
+open the below link and download sqllite: zip file
+
+https://sqlitestudio.pl/index.rvt?act=download
+
+=============================================================================================================
+
+28-09-18
+---------
+
+WEBAPI - ASP.NET CORE:
+=======================
+EXAMPLE LINK:
+https://www.dotnetcurry.com/aspnet/1390/aspnet-core-web-api-attributes
+
+
+Model:
+-> Binding, its has done by following to pass values to ActionResult methods
+->Body
+->Route Parameter
+
+
+In addition to the HTTP verb attributes, we will discuss the action signature level attributes. Where the HTTP verb attributes are applied to the action, these attributes are used within the parameter list. The list of attributes we will discuss are listed below:
+
+FromServicesAttribute
+FromRouteAttribute
+FromQueryAttribute
+FromBodyAttribute
+FromFormAttribute
+============================================================================================================================
+
+Route Attribute
+ASP.NET Core provides a powerful Route attribute. This can be used to define a top-level route 
+at the controller class – doing so leaves a common route that actions can expand upon. 
+For example consider the following:
+
+[Route("api/[Controller]")]
+public class OrdersController : Controller
+{
+    [HttpGet("{id}")]
+    public Task<Order> Get([FromRoute] int id) 
+        => _orderService.GetOrderAsync(id);
+->QueryString
+
+
+public [FromBody]
+[FromRoute]
+[FromService]
+========================================================================================================================
+
+Validation
+------------
+
+-> Data Annotation
+-> Server side code
+-> Self Validation
+-> Client Validation
+-> Remote Validation
+
+Remote validation
+Remote validation is a great feature to use when you need to validate 
+data on the client against data on the server. 
+
+For example,
+
+[Remote(action: "VerifyEmail", controller: "Users")]
+public string Email { get; set; }
+=======================================================================================================================
+Important topic in validation attribute:
+
+IValidationObject
+=======================================================================================================================
+WEB API topic:
+------------------
+
+03 - OCT - 2018
+=======================================================================================================================
+
+https://portal.azure.com -> SIGN up with hexaware.
+
+WEB API SECURIY
+---------------------
+
+Package Manager Console:
+
+Add-Migration "InitialCreate"
+Update-Database
+
+=======================================================================================================================
+
+IdentityServer4.AccessTokenValidation
+
+https://github.com/IdentityServer/IdentityServer4.Quickstart.UI
+
+=======================================================================================================================
+https://github.com/sonusathyadas?tab=repositories
+
+sarahk@hexaware.com
+Password123$
+=======================================================================================================================
+o4-oct-2018
+
+npm i --save oidc-client
+
+C:\Sarah\DotNetCoreProjects\HexSPAClient\HexSPAClient>npm i --save oidc-client
+npm notice created a lockfile as package-lock.json. You should commit this file.
++ oidc-client@1.5.2
+added 7 packages in 69.427s
+=======================================================================================================================
+cmd for migration db:
+
+dotnet ef migrations add InitialPersistedGrantDbMigration -c PersistedGrantDbContext -o Data/Migrations/IdentityServer/PersistedGrantDb
+
+dotnet ef migrations add InitialConfigurationGrantDbMigration -c ConfigurationDbContext -o Data/Migrations/IdentityServer/ConfigurationDb
+=======================================================================================================================
+To check docker for windows are installed and able to pull image "hello-world" from docker server:
+---------------------------------------------------------------------------------------------------
+docker -v
+docker run hello-world
+=======================================================================================================================
+
+
+MicroService:
+-----------------
+
+microservice vs Monolithic:
+-----------------------------
+
+-? Individula re-publis/depolymemt
+INdividula platforms
+invloved scality
+
+=======================================================================================================================
+
+Containerization
+------------------------
+two types:
+Linux 
+windows
+
+=======================================================================================================================
+
+Container vs Images:
+
+docker images layer approach:
+
+=======================================================================================================================
+10 -oct -2018
+--------------------
+Execute these two lines in commmand prompt, to install:
+
+docker pull microsoft/dotnet:2.1-sdk
+docker pull microsoft/dotnet:2.1-aspnetcore-runtime
+=========================================================================
+
+-> docker images downloaded from thhe DOCKERHUB s the world's largest public repository of container images with an array of content sources including container community developers, open source..
+
+docker pull <imagename> -> pull is download
+
+docker login -host <ACR>
+
+docker push <imagename> -> push is upload
+
+DOCKER BUILD -T <imagename>
+
+somename:tag
+ex: blogapi:2.0
+
+docker build -t blogapi
+blogapi :latest
+
+.=> represent current folder
+docker build -t blogapi .
+
+docker push sarahkannaiyan/blogapi
+
+docker tag sourcename_nmae distination_name
+========================================================================
+
+docker images (list all images from docker hub)
+
+docker ps -a
+
+To remove image: not ned to type full imageid, first 4 characters is enough
+docker rmi <imageid>
+
+To stop process (means container)
+docker stop <containerID>
+
+To remove process (means container):
+docker rmi <containerid>
+
+To remove process (means container) forcefully stop the process
+docker rmi <containerid> -f
+
+============================================================================
+
+Docker File creation: 
+https://takacsmark.com/dockerfile-tutorial-by-example-dockerfile-best-practices-2018/#copy-vs-add
+
+FROM <baseimage>
+LABEL <comments>
+RUN <dotnet && dotnet build>
+ENV key values
+WORKDIR /app ex: WORKDIR <folderpath> 
+app folder created
+COPY <src> <dest>
+CMD dotnet run DLL(its a last command to execute)
+EXPOSE 80
+ENTRYPOINT (its contain arguments)
+
+===============================================================
+
+
+
+
+
+
+
+

@@ -1,0 +1,69 @@
+Create resource and below command execute in the portal powershell:
+===================================================================
+
+az group create --name AKSGroup --location Southeastasia
+
+az aks create --resource-group=AKSGroup --name=saracluster --dns-name-prefix=bytestream --generate-ssh-keys --node-count=2
+
+Modules:
+	BlogAPI
+	Identity
+	MVC CLIENT
+
+SERVICES:
+	SQL DB
+		Add Firewall execption
+	ACR 
+		Container Registry:
+====================================================================================================
+login server: sararegistry.azurecr.io
+password: 7af8fc24-672a-4c6d-bfcb-e4630ab35d54
+APP ID: a76cc082-024c-4ac8-95fc-162055cb7c25
+====================================================================================================
+
+ACR_REGISTRY_ID=$(az acr show --name sararegistry --query id --output tsv)
+echo $ACR_REGISTRY_ID
+SP_PASSWD=$(az ad sp create-for-rbac --name myacrspsara --scopes $ACR_REGISTRY_ID --role owner --query password --output tsv)
+echo $SP_PASSWD
+
+SP_APP_ID=$(az ad sp show --id http://myacrspsara --query appId --output tsv)
+
+EXECUTE in command prompt LOCAL MACHINE:
+----------------------------
+docker login sararegistry.azurecr.io -u <APP_ID> -p <APP_PWD>
+docker login sararegistry.azurecr.io -u a76cc082-024c-4ac8-95fc-162055cb7c25 -p 7af8fc24-672a-4c6d-bfcb-e4630ab35d54
+
+
+Open n execute in visual code:
+
+docker build -t sararegistry.azurecr.io/blogapi .
+
+docker build -t sararegistry.azurecr.io/identityserver .
+
+docker build -t sararegistry.azurecr.io/blogclient .
+
+
+docker push sararegistry.azurecr.io/blogapi
+docker push sararegistry.azurecr.io/identityserver
+docker push sararegistry.azurecr.io/blogclient
+
+===================================================================================================
+az aks show --name sarahcluster --resource-group AKSGroup --output table
+
+az aks install-cli
+
+az aks get-credentials --resource-group=AKSGroup --name=sarahcluster
+o/p: Merged "sarahcluster" as current context in C:\Users\Hvuser\.kube\config
+
+
+az aks browse -g AKSGroup -n sarahcluster
+
+
+
+kubectl create secret docker-registry regcred --docker-server=<ACR_LOGIN_SERVER> --docker-username=<APP_ID> --docker-password=<APP_PWD> --docker-email=sarahk@hexaware.com
+
+kubectl create secret docker-registry regcred --docker-server=sararegistry.azurecr.io --docker-username=a76cc082-024c-4ac8-95fc-162055cb7c25 --docker-password=7af8fc24-672a-4c6d-bfcb-e4630ab35d54 --docker-email=sarahk@hexaware.com
+
+=========================================
+
+https://github.com/kubernetes/dashboard/wiki/access-control#admin-privileges

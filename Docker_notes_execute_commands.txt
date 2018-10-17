@@ -1,0 +1,35 @@
+docker build -t staticapp .
+docker images
+docker ps
+docker run -p 9090:80 staticapp
+
+open brower -> http://localhost:9090/
+
+
+docker ps -a (list out newly created images)
+docker stop 2b56 (first 4 characters image id)
+docker rm 2b56 (to remove image)
+docker ps -a (removed)
+
+SarahKannaiyan
+Newfacebookgit1
+
+sarahdocker
+Newfacebookdocker
+
+
+
+======================
+
+<accountname>/imagegallery
+docker images
+
+docker push sarahdocker/imagegallery:v1
+docker login
+
+
+.net core
+asp.net mvc
+web api
+mongo
+===================================================================

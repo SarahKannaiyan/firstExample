@@ -1,0 +1,10 @@
+Microservice:
+
+Microsoft Azure Service Fabric
+=====================================
+
+AKS 
+SF (SERVICE Fabric)
+
+
+https://github.com/dotnet/eShopOnContainer
